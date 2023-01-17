@@ -31,12 +31,57 @@ staar_e2_raw <- read_csv(here::here("data-raw", "STAAR aggregate", "cfy22ee2.dat
 clean_staar_agg = function(.data, .grade, .lang) {
   .data %>% 
     select(c(CAMPUS, r_all_d, r_all_unsatgl_nm, r_all_approgl_nm, r_all_meetsgl_nm, r_all_mastrgl_nm, m_all_d, m_all_unsatgl_nm,
-             m_all_approgl_nm, m_all_meetsgl_nm, m_all_mastrgl_nm)) %>%
+             m_all_approgl_nm, m_all_meetsgl_nm, m_all_mastrgl_nm,
+             r_ecoy_d, r_ecoy_unsatgl_nm, r_ecoy_approgl_nm, r_ecoy_meetsgl_nm, r_ecoy_mastrgl_nm,
+             m_ecoy_d, m_ecoy_unsatgl_nm, m_ecoy_approgl_nm, m_ecoy_meetsgl_nm, m_ecoy_mastrgl_nm,
+             r_ethh_d, r_ethh_unsatgl_nm, r_ethh_approgl_nm, r_ethh_meetsgl_nm, r_ethh_mastrgl_nm,
+             m_ethh_d, m_ethh_unsatgl_nm, m_ethh_approgl_nm, m_ethh_meetsgl_nm, m_ethh_mastrgl_nm,
+             r_ethi_d, r_ethi_unsatgl_nm, r_ethi_approgl_nm, r_ethi_meetsgl_nm, r_ethi_mastrgl_nm,
+             m_ethi_d, m_ethi_unsatgl_nm, m_ethi_approgl_nm, m_ethi_meetsgl_nm, m_ethi_mastrgl_nm,
+             r_etha_d, r_etha_unsatgl_nm, r_etha_approgl_nm, r_etha_meetsgl_nm, r_etha_mastrgl_nm,
+             m_etha_d, m_etha_unsatgl_nm, m_etha_approgl_nm, m_etha_meetsgl_nm, m_etha_mastrgl_nm,
+             r_ethb_d, r_ethb_unsatgl_nm, r_ethb_approgl_nm, r_ethb_meetsgl_nm, r_ethb_mastrgl_nm,
+             m_ethb_d, m_ethb_unsatgl_nm, m_ethb_approgl_nm, m_ethb_meetsgl_nm, m_ethb_mastrgl_nm,
+             r_eth2_d, r_eth2_unsatgl_nm, r_eth2_approgl_nm, r_eth2_meetsgl_nm, r_eth2_mastrgl_nm,
+             m_eth2_d, m_eth2_unsatgl_nm, m_eth2_approgl_nm, m_eth2_meetsgl_nm, m_eth2_mastrgl_nm,
+             r_ethp_d, r_ethp_unsatgl_nm, r_ethp_approgl_nm, r_ethp_meetsgl_nm, r_ethp_mastrgl_nm,
+             m_ethp_d, m_ethp_unsatgl_nm, m_ethp_approgl_nm, m_ethp_meetsgl_nm, m_ethp_mastrgl_nm
+             )) %>%
     reshape::rename(c(r_all_d = "r.all.cnt", r_all_unsatgl_nm = "r.notmeet.cnt", r_all_approgl_nm = "r.approaches.cnt",
                       r_all_meetsgl_nm = "r.meets.cnt", r_all_mastrgl_nm = "r.masters.cnt", m_all_d = "m.all.cnt",
                       m_all_unsatgl_nm = "m.notmeet.cnt", m_all_approgl_nm = "m.approaches.cnt", m_all_meetsgl_nm = "m.meets.cnt",
-                      m_all_mastrgl_nm = "m.masters.cnt")) %>% 
-    pivot_longer(cols = c(r.all.cnt:m.masters.cnt), names_to = "variable", values_to = "value") %>% 
+                      m_all_mastrgl_nm = "m.masters.cnt",
+                      r_ecoy_d = "r.ecoy.all.cnt", r_ecoy_unsatgl_nm = "r.ecoy.notmeet.cnt", r_ecoy_approgl_nm = "r.ecoy.approaches.cnt",
+                      r_ecoy_meetsgl_nm = "r.ecoy.meets.cnt", r_ecoy_mastrgl_nm = "r.ecoy.masters.cnt", m_ecoy_d = "m.ecoy.all.cnt",
+                      m_ecoy_unsatgl_nm = "m.ecoy.notmeet.cnt", m_ecoy_approgl_nm = "m.ecoy.approaches.cnt", m_ecoy_meetsgl_nm = "m.ecoy.meets.cnt",
+                      m_ecoy_mastrgl_nm = "m.ecoy.masters.cnt",
+                      r_ethh_d = "r.ethh.all.cnt", r_ethh_unsatgl_nm = "r.ethh.notmeet.cnt", r_ethh_approgl_nm = "r.ethh.approaches.cnt",
+                      r_ethh_meetsgl_nm = "r.ethh.meets.cnt", r_ethh_mastrgl_nm = "r.ethh.masters.cnt", m_ethh_d = "m.ethh.all.cnt",
+                      m_ethh_unsatgl_nm = "m.ethh.notmeet.cnt", m_ethh_approgl_nm = "m.ethh.approaches.cnt", m_ethh_meetsgl_nm = "m.ethh.meets.cnt",
+                      m_ethh_mastrgl_nm = "m.ethh.masters.cnt",
+                      r_ethi_d = "r.ethi.all.cnt", r_ethi_unsatgl_nm = "r.ethi.notmeet.cnt", r_ethi_approgl_nm = "r.ethi.approaches.cnt",
+                      r_ethi_meetsgl_nm = "r.ethi.meets.cnt", r_ethi_mastrgl_nm = "r.ethi.masters.cnt", m_ethi_d = "m.ethi.all.cnt",
+                      m_ethi_unsatgl_nm = "m.ethi.notmeet.cnt", m_ethi_approgl_nm = "m.ethi.approaches.cnt", m_ethi_meetsgl_nm = "m.ethi.meets.cnt",
+                      m_ethi_mastrgl_nm = "m.ethi.masters.cnt",
+                      r_etha_d = "r.etha.all.cnt", r_etha_unsatgl_nm = "r.etha.notmeet.cnt", r_etha_approgl_nm = "r.etha.approaches.cnt",
+                      r_etha_meetsgl_nm = "r.etha.meets.cnt", r_etha_mastrgl_nm = "r.etha.masters.cnt", m_etha_d = "m.etha.all.cnt",
+                      m_etha_unsatgl_nm = "m.etha.notmeet.cnt", m_etha_approgl_nm = "m.etha.approaches.cnt", m_etha_meetsgl_nm = "m.etha.meets.cnt",
+                      m_etha_mastrgl_nm = "m.etha.masters.cnt",
+                      r_ethb_d = "r.ethb.all.cnt", r_ethb_unsatgl_nm = "r.ethb.notmeet.cnt", r_ethb_approgl_nm = "r.ethb.approaches.cnt",
+                      r_ethb_meetsgl_nm = "r.ethb.meets.cnt", r_ethb_mastrgl_nm = "r.ethb.masters.cnt", m_ethb_d = "m.ethb.all.cnt",
+                      m_ethb_unsatgl_nm = "m.ethb.notmeet.cnt", m_ethb_approgl_nm = "m.ethb.approaches.cnt", m_ethb_meetsgl_nm = "m.ethb.meets.cnt",
+                      m_ethb_mastrgl_nm = "m.ethb.masters.cnt",
+                      r_eth2_d = "r.eth2.all.cnt", r_eth2_unsatgl_nm = "r.eth2.notmeet.cnt", r_eth2_approgl_nm = "r.eth2.approaches.cnt",
+                      r_eth2_meetsgl_nm = "r.eth2.meets.cnt", r_eth2_mastrgl_nm = "r.eth2.masters.cnt", m_eth2_d = "m.eth2.all.cnt",
+                      m_eth2_unsatgl_nm = "m.eth2.notmeet.cnt", m_eth2_approgl_nm = "m.eth2.approaches.cnt", m_eth2_meetsgl_nm = "m.eth2.meets.cnt",
+                      m_eth2_mastrgl_nm = "m.eth2.masters.cnt",
+                      r_ethp_d = "r.ethp.all.cnt", r_ethp_unsatgl_nm = "r.ethp.notmeet.cnt", r_ethp_approgl_nm = "r.ethp.approaches.cnt",
+                      r_ethp_meetsgl_nm = "r.ethp.meets.cnt", r_ethp_mastrgl_nm = "r.ethp.masters.cnt", m_ethp_d = "m.ethp.all.cnt",
+                      m_ethp_unsatgl_nm = "m.ethp.notmeet.cnt", m_ethp_approgl_nm = "m.ethp.approaches.cnt", m_ethp_meetsgl_nm = "m.ethp.meets.cnt",
+                      m_ethp_mastrgl_nm = "m.ethp.masters.cnt"
+                      )) %>% 
+    dplyr::select(CAMPUS, r.all.cnt:m.ethp.masters.cnt) %>% 
+    pivot_longer(cols = c(r.all.cnt:m.ethp.masters.cnt), names_to = "variable", values_to = "value") %>% 
     mutate(grade = .grade, lang = .lang)
 }
 
@@ -52,26 +97,119 @@ staar_8 = clean_staar_agg(staar_8_raw, "8", "e")
 
 staar_a1 = staar_a1_raw %>% 
   dplyr::rename(CAMPUS = campus) %>%  
-  select(c(CAMPUS, a1_all_d, a1_all_unsatgl_nm, a1_all_approgl_nm, a1_all_meetsgl_nm, a1_all_mastrgl_nm)) %>%
-  reshape::rename(c(a1_all_d = "alg1.all.cnt", a1_all_unsatgl_nm = "alg1.notmeet.cnt", a1_all_approgl_nm = "alg1.approaches.cnt",
-                    a1_all_meetsgl_nm = "alg1.meets.cnt", a1_all_mastrgl_nm = "alg1.masters.cnt")) %>% 
-  pivot_longer(cols = c(alg1.all.cnt:alg1.masters.cnt), names_to = "variable", values_to = "value") %>% 
+  select(c(CAMPUS, a1_all_d, a1_all_unsatgl_nm, a1_all_approgl_nm, a1_all_meetsgl_nm, a1_all_mastrgl_nm,
+           a1_ecoy_d, a1_ecoy_unsatgl_nm, a1_ecoy_approgl_nm, a1_ecoy_meetsgl_nm, a1_ecoy_mastrgl_nm,
+           a1_ethh_d, a1_ethh_unsatgl_nm, a1_ethh_approgl_nm, a1_ethh_meetsgl_nm, a1_ethh_mastrgl_nm,
+           a1_ethi_d, a1_ethi_unsatgl_nm, a1_ethi_approgl_nm, a1_ethi_meetsgl_nm, a1_ethi_mastrgl_nm,
+           a1_etha_d, a1_etha_unsatgl_nm, a1_etha_approgl_nm, a1_etha_meetsgl_nm, a1_etha_mastrgl_nm,
+           a1_ethb_d, a1_ethb_unsatgl_nm, a1_ethb_approgl_nm, a1_ethb_meetsgl_nm, a1_ethb_mastrgl_nm,
+           a1_ethp_d, a1_ethp_unsatgl_nm, a1_ethp_approgl_nm, a1_ethp_meetsgl_nm, a1_ethp_mastrgl_nm,
+           a1_eth2_d, a1_eth2_unsatgl_nm, a1_eth2_approgl_nm, a1_eth2_meetsgl_nm, a1_eth2_mastrgl_nm
+           )) %>%
+  reshape::rename(c(a1_all_d = "alg1.all.cnt", a1_all_unsatgl_nm = "alg1.notmeet.cnt", 
+                    a1_all_approgl_nm = "alg1.approaches.cnt",a1_all_meetsgl_nm = "alg1.meets.cnt", 
+                    a1_all_mastrgl_nm = "alg1.masters.cnt",
+                    a1_ecoy_d = "alg1.ecoy.all.cnt", a1_ecoy_unsatgl_nm = "alg1.ecoy.notmeet.cnt", 
+                    a1_ecoy_approgl_nm = "alg1.ecoy.approaches.cnt", a1_ecoy_meetsgl_nm = "alg1.ecoy.meets.cnt", 
+                    a1_ecoy_mastrgl_nm = "alg1.ecoy.masters.cnt",
+                    a1_ethh_d = "alg1.ethh.all.cnt", a1_ethh_unsatgl_nm = "alg1.ethh.notmeet.cnt", 
+                    a1_ethh_approgl_nm = "alg1.ethh.approaches.cnt", a1_ethh_meetsgl_nm = "alg1.ethh.meets.cnt", 
+                    a1_ethh_mastrgl_nm = "alg1.ethh.masters.cnt",
+                    a1_ethi_d = "alg1.ethi.all.cnt", a1_ethi_unsatgl_nm = "alg1.ethi.notmeet.cnt", 
+                    a1_ethi_approgl_nm = "alg1.ethi.approaches.cnt", a1_ethi_meetsgl_nm = "alg1.ethi.meets.cnt", 
+                    a1_ethi_mastrgl_nm = "alg1.ethi.masters.cnt",
+                    a1_etha_d = "alg1.etha.all.cnt", a1_etha_unsatgl_nm = "alg1.etha.notmeet.cnt", 
+                    a1_etha_approgl_nm = "alg1.etha.approaches.cnt", a1_etha_meetsgl_nm = "alg1.etha.meets.cnt", 
+                    a1_etha_mastrgl_nm = "alg1.etha.masters.cnt",
+                    a1_ethb_d = "alg1.ethb.all.cnt", a1_ethb_unsatgl_nm = "alg1.ethb.notmeet.cnt", 
+                    a1_ethb_approgl_nm = "alg1.ethb.approaches.cnt", a1_ethb_meetsgl_nm = "alg1.ethb.meets.cnt", 
+                    a1_ethb_mastrgl_nm = "alg1.ethb.masters.cnt",
+                    a1_ethp_d = "alg1.ethp.all.cnt", a1_ethp_unsatgl_nm = "alg1.ethp.notmeet.cnt", 
+                    a1_ethp_approgl_nm = "alg1.ethp.approaches.cnt", a1_ethp_meetsgl_nm = "alg1.ethp.meets.cnt", 
+                    a1_ethp_mastrgl_nm = "alg1.ethp.masters.cnt",
+                    a1_eth2_d = "alg1.eth2.all.cnt", a1_eth2_unsatgl_nm = "alg1.eth2.notmeet.cnt", 
+                    a1_eth2_approgl_nm = "alg1.eth2.approaches.cnt", a1_eth2_meetsgl_nm = "alg1.eth2.meets.cnt", 
+                    a1_eth2_mastrgl_nm = "alg1.eth2.masters.cnt"
+                    )) %>% 
+  pivot_longer(cols = c(alg1.all.cnt:alg1.eth2.masters.cnt), names_to = "variable", values_to = "value") %>% 
   mutate(grade = "", lang = "e")
 
 staar_e1 <- staar_e1_raw %>%
-  dplyr::rename(CAMPUS = campus) %>%
-  select(c(CAMPUS, e1_all_d, e1_all_unsatgl_nm, e1_all_approgl_nm, e1_all_meetsgl_nm, e1_all_mastrgl_nm)) %>%
-  reshape::rename(c(e1_all_d = "eng1.all.cnt", e1_all_unsatgl_nm = "eng1.notmeet.cnt", e1_all_approgl_nm = "eng1.approaches.cnt",
-                    e1_all_meetsgl_nm = "eng1.meets.cnt", e1_all_mastrgl_nm = "eng1.masters.cnt")) %>% 
-  pivot_longer(cols = c(eng1.all.cnt:eng1.masters.cnt), names_to = "variable", values_to = "value") %>% 
+  dplyr::rename(CAMPUS = campus) %>%  
+  select(c(CAMPUS, e1_all_d, e1_all_unsatgl_nm, e1_all_approgl_nm, e1_all_meetsgl_nm, e1_all_mastrgl_nm,
+           e1_ecoy_d, e1_ecoy_unsatgl_nm, e1_ecoy_approgl_nm, e1_ecoy_meetsgl_nm, e1_ecoy_mastrgl_nm,
+           e1_ethh_d, e1_ethh_unsatgl_nm, e1_ethh_approgl_nm, e1_ethh_meetsgl_nm, e1_ethh_mastrgl_nm,
+           e1_ethi_d, e1_ethi_unsatgl_nm, e1_ethi_approgl_nm, e1_ethi_meetsgl_nm, e1_ethi_mastrgl_nm,
+           e1_etha_d, e1_etha_unsatgl_nm, e1_etha_approgl_nm, e1_etha_meetsgl_nm, e1_etha_mastrgl_nm,
+           e1_ethb_d, e1_ethb_unsatgl_nm, e1_ethb_approgl_nm, e1_ethb_meetsgl_nm, e1_ethb_mastrgl_nm,
+           e1_ethp_d, e1_ethp_unsatgl_nm, e1_ethp_approgl_nm, e1_ethp_meetsgl_nm, e1_ethp_mastrgl_nm,
+           e1_eth2_d, e1_eth2_unsatgl_nm, e1_eth2_approgl_nm, e1_eth2_meetsgl_nm, e1_eth2_mastrgl_nm
+  )) %>%
+  reshape::rename(c(e1_all_d = "eng1.all.cnt", e1_all_unsatgl_nm = "eng1.notmeet.cnt", 
+                    e1_all_approgl_nm = "eng1.approaches.cnt",e1_all_meetsgl_nm = "eng1.meets.cnt", 
+                    e1_all_mastrgl_nm = "eng1.masters.cnt",
+                    e1_ecoy_d = "eng1.ecoy.all.cnt", e1_ecoy_unsatgl_nm = "eng1.ecoy.notmeet.cnt", 
+                    e1_ecoy_approgl_nm = "eng1.ecoy.approaches.cnt", e1_ecoy_meetsgl_nm = "eng1.ecoy.meets.cnt", 
+                    e1_ecoy_mastrgl_nm = "eng1.ecoy.masters.cnt",
+                    e1_ethh_d = "eng1.ethh.all.cnt", e1_ethh_unsatgl_nm = "eng1.ethh.notmeet.cnt", 
+                    e1_ethh_approgl_nm = "eng1.ethh.approaches.cnt", e1_ethh_meetsgl_nm = "eng1.ethh.meets.cnt", 
+                    e1_ethh_mastrgl_nm = "eng1.ethh.masters.cnt",
+                    e1_ethi_d = "eng1.ethi.all.cnt", e1_ethi_unsatgl_nm = "eng1.ethi.notmeet.cnt", 
+                    e1_ethi_approgl_nm = "eng1.ethi.approaches.cnt", e1_ethi_meetsgl_nm = "eng1.ethi.meets.cnt", 
+                    e1_ethi_mastrgl_nm = "eng1.ethi.masters.cnt",
+                    e1_etha_d = "eng1.etha.all.cnt", e1_etha_unsatgl_nm = "eng1.etha.notmeet.cnt", 
+                    e1_etha_approgl_nm = "eng1.etha.approaches.cnt", e1_etha_meetsgl_nm = "eng1.etha.meets.cnt", 
+                    e1_etha_mastrgl_nm = "eng1.etha.masters.cnt",
+                    e1_ethb_d = "eng1.ethb.all.cnt", e1_ethb_unsatgl_nm = "eng1.ethb.notmeet.cnt", 
+                    e1_ethb_approgl_nm = "eng1.ethb.approaches.cnt", e1_ethb_meetsgl_nm = "eng1.ethb.meets.cnt", 
+                    e1_ethb_mastrgl_nm = "eng1.ethb.masters.cnt",
+                    e1_ethp_d = "eng1.ethp.all.cnt", e1_ethp_unsatgl_nm = "eng1.ethp.notmeet.cnt", 
+                    e1_ethp_approgl_nm = "eng1.ethp.approaches.cnt", e1_ethp_meetsgl_nm = "eng1.ethp.meets.cnt", 
+                    e1_ethp_mastrgl_nm = "eng1.ethp.masters.cnt",
+                    e1_eth2_d = "eng1.eth2.all.cnt", e1_eth2_unsatgl_nm = "eng1.eth2.notmeet.cnt", 
+                    e1_eth2_approgl_nm = "eng1.eth2.approaches.cnt", e1_eth2_meetsgl_nm = "eng1.eth2.meets.cnt", 
+                    e1_eth2_mastrgl_nm = "eng1.eth2.masters.cnt"
+  )) %>% 
+  pivot_longer(cols = c(eng1.all.cnt:eng1.eth2.masters.cnt), names_to = "variable", values_to = "value") %>% 
   mutate(grade = "", lang = "e")
 
 staar_e2 <- staar_e2_raw %>%
-  dplyr::rename(CAMPUS = campus) %>%
-  select(c(CAMPUS, e2_all_d, e2_all_unsatgl_nm, e2_all_approgl_nm, e2_all_meetsgl_nm, e2_all_mastrgl_nm)) %>%
-  reshape::rename(c(e2_all_d = "eng2.all.cnt", e2_all_unsatgl_nm = "eng2.notmeet.cnt", e2_all_approgl_nm = "eng2.approaches.cnt",
-                    e2_all_meetsgl_nm = "eng2.meets.cnt", e2_all_mastrgl_nm = "eng2.masters.cnt")) %>% 
-  pivot_longer(cols = c(eng2.all.cnt:eng2.masters.cnt), names_to = "variable", values_to = "value") %>% 
+  dplyr::rename(CAMPUS = campus) %>%  
+  select(c(CAMPUS, e2_all_d, e2_all_unsatgl_nm, e2_all_approgl_nm, e2_all_meetsgl_nm, e2_all_mastrgl_nm,
+           e2_ecoy_d, e2_ecoy_unsatgl_nm, e2_ecoy_approgl_nm, e2_ecoy_meetsgl_nm, e2_ecoy_mastrgl_nm,
+           e2_ethh_d, e2_ethh_unsatgl_nm, e2_ethh_approgl_nm, e2_ethh_meetsgl_nm, e2_ethh_mastrgl_nm,
+           e2_ethi_d, e2_ethi_unsatgl_nm, e2_ethi_approgl_nm, e2_ethi_meetsgl_nm, e2_ethi_mastrgl_nm,
+           e2_etha_d, e2_etha_unsatgl_nm, e2_etha_approgl_nm, e2_etha_meetsgl_nm, e2_etha_mastrgl_nm,
+           e2_ethb_d, e2_ethb_unsatgl_nm, e2_ethb_approgl_nm, e2_ethb_meetsgl_nm, e2_ethb_mastrgl_nm,
+           e2_ethp_d, e2_ethp_unsatgl_nm, e2_ethp_approgl_nm, e2_ethp_meetsgl_nm, e2_ethp_mastrgl_nm,
+           e2_eth2_d, e2_eth2_unsatgl_nm, e2_eth2_approgl_nm, e2_eth2_meetsgl_nm, e2_eth2_mastrgl_nm
+  )) %>%
+  reshape::rename(c(e2_all_d = "eng2.all.cnt", e2_all_unsatgl_nm = "eng2.notmeet.cnt", 
+                    e2_all_approgl_nm = "eng2.approaches.cnt",e2_all_meetsgl_nm = "eng2.meets.cnt", 
+                    e2_all_mastrgl_nm = "eng2.masters.cnt",
+                    e2_ecoy_d = "eng2.ecoy.all.cnt", e2_ecoy_unsatgl_nm = "eng2.ecoy.notmeet.cnt", 
+                    e2_ecoy_approgl_nm = "eng2.ecoy.approaches.cnt", e2_ecoy_meetsgl_nm = "eng2.ecoy.meets.cnt", 
+                    e2_ecoy_mastrgl_nm = "eng2.ecoy.masters.cnt",
+                    e2_ethh_d = "eng2.ethh.all.cnt", e2_ethh_unsatgl_nm = "eng2.ethh.notmeet.cnt", 
+                    e2_ethh_approgl_nm = "eng2.ethh.approaches.cnt", e2_ethh_meetsgl_nm = "eng2.ethh.meets.cnt", 
+                    e2_ethh_mastrgl_nm = "eng2.ethh.masters.cnt",
+                    e2_ethi_d = "eng2.ethi.all.cnt", e2_ethi_unsatgl_nm = "eng2.ethi.notmeet.cnt", 
+                    e2_ethi_approgl_nm = "eng2.ethi.approaches.cnt", e2_ethi_meetsgl_nm = "eng2.ethi.meets.cnt", 
+                    e2_ethi_mastrgl_nm = "eng2.ethi.masters.cnt",
+                    e2_etha_d = "eng2.etha.all.cnt", e2_etha_unsatgl_nm = "eng2.etha.notmeet.cnt", 
+                    e2_etha_approgl_nm = "eng2.etha.approaches.cnt", e2_etha_meetsgl_nm = "eng2.etha.meets.cnt", 
+                    e2_etha_mastrgl_nm = "eng2.etha.masters.cnt",
+                    e2_ethb_d = "eng2.ethb.all.cnt", e2_ethb_unsatgl_nm = "eng2.ethb.notmeet.cnt", 
+                    e2_ethb_approgl_nm = "eng2.ethb.approaches.cnt", e2_ethb_meetsgl_nm = "eng2.ethb.meets.cnt", 
+                    e2_ethb_mastrgl_nm = "eng2.ethb.masters.cnt",
+                    e2_ethp_d = "eng2.ethp.all.cnt", e2_ethp_unsatgl_nm = "eng2.ethp.notmeet.cnt", 
+                    e2_ethp_approgl_nm = "eng2.ethp.approaches.cnt", e2_ethp_meetsgl_nm = "eng2.ethp.meets.cnt", 
+                    e2_ethp_mastrgl_nm = "eng2.ethp.masters.cnt",
+                    e2_eth2_d = "eng2.eth2.all.cnt", e2_eth2_unsatgl_nm = "eng2.eth2.notmeet.cnt", 
+                    e2_eth2_approgl_nm = "eng2.eth2.approaches.cnt", e2_eth2_meetsgl_nm = "eng2.eth2.meets.cnt", 
+                    e2_eth2_mastrgl_nm = "eng2.eth2.masters.cnt"
+  )) %>% 
+  pivot_longer(cols = c(eng2.all.cnt:eng2.eth2.masters.cnt), names_to = "variable", values_to = "value") %>% 
   mutate(grade = "", lang = "e")
 
 
@@ -81,6 +219,25 @@ staar_all = rbind(staar_eng3, staar_sp3, staar_eng4, staar_sp4, staar_eng5, staa
   group_by(CAMPUS, variable) %>% 
   summarise(value = sum(value, na.rm=T)) %>% 
   ungroup() %>% 
+  mutate(
+    group = case_when(
+      str_detect(variable, "eth") ~ "soc",
+      str_detect(variable, "ecoy") ~ "ecod",
+      TRUE ~ "all"
+    ),
+    variable = str_remove(variable, "ecoy\\.|ethh\\.|ethi\\.|etha\\.|ethb\\.|ethp\\.|eth2\\.")
+  ) %>%
+  group_by(CAMPUS, group, variable) %>% 
+  summarise(value = sum(value, na.rm=T)) %>% 
+  mutate(
+    variable = case_when(
+      group=="soc" ~ paste0(variable, "_soc"),
+      group=="ecod" ~ paste0(variable, "_ecod"),
+      TRUE ~ variable
+    )
+  ) %>% 
+  ungroup() %>% 
+  dplyr::select(-group) %>% 
   pivot_wider(names_from = "variable", values_from = "value") %>%
   mutate(
     r.notmeet.pct = (r.notmeet.cnt/r.all.cnt)*100,
@@ -102,12 +259,32 @@ staar_all = rbind(staar_eng3, staar_sp3, staar_eng4, staar_sp4, staar_eng5, staa
     alg1.notmeet.pct = (alg1.notmeet.cnt/alg1.all.cnt)*100,
     alg1.approaches.pct = (alg1.approaches.cnt/alg1.all.cnt)*100,
     alg1.meets.pct = (alg1.meets.cnt/alg1.all.cnt)*100,
-    alg1.masters.pct = (alg1.masters.cnt/alg1.all.cnt)*100
+    alg1.masters.pct = (alg1.masters.cnt/alg1.all.cnt)*100,
+    
+    r.meets.pct_soc = (r.meets.cnt_soc/r.all.cnt_soc)*100,
+    m.meets.pct_soc = (m.meets.cnt_soc/m.all.cnt_soc)*100,
+    alg1.meets.pct_soc = (alg1.meets.cnt_soc/alg1.all.cnt_soc)*100,
+    eng1.meets.pct_soc = (eng1.meets.cnt_soc/eng1.all.cnt_soc)*100,
+    eng2.meets.pct_soc = (eng2.meets.cnt_soc/eng2.all.cnt_soc)*100,
+    
+    r.meets.pct_ecod = (r.meets.cnt_ecod/r.all.cnt_ecod)*100,
+    m.meets.pct_ecod = (m.meets.cnt_ecod/m.all.cnt_ecod)*100,
+    alg1.meets.pct_ecod = (alg1.meets.cnt_ecod/alg1.all.cnt_ecod)*100,
+    eng1.meets.pct_ecod = (eng1.meets.cnt_ecod/eng1.all.cnt_ecod)*100,
+    eng2.meets.pct_ecod = (eng2.meets.cnt_ecod/eng2.all.cnt_ecod)*100,
+    
+    
   ) %>% 
   ungroup() %>%
   select(c("CAMPUS","r.all.cnt","r.notmeet.cnt","r.approaches.cnt","r.meets.cnt","r.masters.cnt","m.all.cnt","m.notmeet.cnt",
            "m.approaches.cnt","m.meets.cnt","m.masters.cnt","r.notmeet.pct","r.approaches.pct","r.meets.pct","r.masters.pct",
-           "m.notmeet.pct","m.approaches.pct","m.meets.pct","m.masters.pct", "eng1.notmeet.cnt", alg1.all.cnt:eng2.masters.pct)) %>%
+           "m.notmeet.pct","m.approaches.pct","m.meets.pct","m.masters.pct", "eng1.notmeet.cnt", alg1.all.cnt:eng2.masters.pct,
+           r.meets.pct_soc:eng2.meets.pct_ecod,
+           alg1.meets.cnt_soc,alg1.all.cnt_soc, eng1.meets.cnt_soc, eng1.all.cnt_soc,
+           eng2.meets.cnt_soc, eng2.all.cnt_soc,
+           alg1.meets.cnt_ecod,alg1.all.cnt_ecod, eng1.meets.cnt_ecod, eng1.all.cnt_ecod,
+           eng2.meets.cnt_ecod, eng2.all.cnt_ecod,
+           )) %>%
   naniar::replace_with_na(replace = list(r.meets.pct = c(NaN), m.meets.pct = c(NaN)))
 
 
@@ -209,7 +386,8 @@ grad_rates = rbind(four_yr_grads, five_yr_grads, six_yr_grads) %>%
   pivot_wider(names_from = variable, values_from = value)
 
 college_readiness = full_join(sat_act, ap_ib, by = "CAMPUS") %>% 
-  full_join(., grad_rates, by = "CAMPUS") 
+  full_join(., grad_rates, by = "CAMPUS") %>% 
+  mutate(CAMPUS = str_pad(CAMPUS, 9, "left", "0"))
 
 
 
@@ -228,11 +406,26 @@ campus = campus_sf %>%
     county.num = county_num, county = county_nam, region = esc_region,
     grades = grade_rang,
     charter_type = charter_ty, 
-    campus_address = match_addr, campus_lon = x, campus_lat = y
+    campus_address = match_addr, campus_lon = x, campus_lat = y,
+    instructio
   ) %>% 
   mutate(charter = ifelse(charter_type != " ", 1, 0)) %>% 
   separate(grades, c("low.grade", "high.grade"), sep = "([\\-])") %>%
-  select(-c(GRDTYPE, county, county.num))
+  select(-c(county, county.num))
+
+kipp = campus %>% filter(str_detect(district, "KIPP")) %>% 
+  st_as_sf(coords = c("campus_lon", "campus_lat"), crs=st_crs(4326))
+
+county = tigris::counties(48) %>% st_transform(st_crs(4326))
+
+campus_county = campus %>% 
+  filter(!is.na(campus_lon)) %>% 
+  st_as_sf(coords = c("campus_lon", "campus_lat"), crs=st_crs(4326)) %>% 
+  st_join(., county) %>% 
+  dplyr::select(CAMPUS, county.num = GEOID, county.nam=NAME) %>% 
+  st_drop_geometry()
+  
+
 
 ## PEG status----------
 peg = read_excel(here::here("data-raw/Children At Risk PIR_PR Response Part 2.xlsx")) %>% 
@@ -253,8 +446,8 @@ magnet_echs = read_csv(here::here("data-raw/PRU_7128.csv")) %>%
 # Source: https://rptsvr1.tea.texas.gov/perfreport/tapr/2021/download/DownloadData.html
 
 campus_demographics = read_csv(here::here("data-raw/CAMPPROF.csv")) %>% 
-  mutate(CAMPUS = gsub("'00", "", CAMPUS),
-         CAMPUS = gsub("'0", "", CAMPUS),
+  mutate(#CAMPUS = gsub("'00", "", CAMPUS),
+         #CAMPUS = gsub("'0", "", CAMPUS),
          CAMPUS = gsub("'", "", CAMPUS)) %>%
   reshape::rename(c(CPETALLC = "all.cnt", CPETWHIC = "white.cnt",
                     CPETBLAC = "black.cnt", CPETHISC = "hisp.cnt",
@@ -283,18 +476,30 @@ campus_demographics = read_csv(here::here("data-raw/CAMPPROF.csv")) %>%
   )
 
 campus_info = left_join(campus, campus_demographics) %>% 
+  left_join(., campus_county) %>% 
   left_join(., peg) %>% 
   left_join(., magnet_echs)
 
-# Combine CAMPUS_ALL ----------
-campus_all <- full_join(campus_info, staar_all, by = "CAMPUS") %>%
-  left_join(., college_readiness, by = "CAMPUS")
 
 
 
 #GROWTH DATA --------------------------
 
+#read in growth scores and replace NA scores
+growth <- readRDS(here::here("data-clean/growth-by-campus.rds")) %>% 
+  select(c(CAMPUS, ncemath, nceread)) %>%
+  reshape::rename(c(ncemath = "ncemath", nceread = "nceread")) %>%
+  mutate(ncemath = ifelse(is.na(ncemath), nceread, ncemath),
+         nceread = ifelse(is.na(nceread), ncemath, nceread),
+         growth.avg = (nceread + ncemath)/2, #calculate average growth
+         CAMPUS = str_pad(as.character(CAMPUS), 9, "left", "0")) #for merging
 
+
+# Combine CAMPUS_ALL ----------
+campus_all <- full_join(campus_info, staar_all, by = "CAMPUS") %>%
+  left_join(., college_readiness, by = "CAMPUS") %>% 
+  left_join(., growth, by="CAMPUS") %>% 
+  mutate(CAMPUS = as.numeric(CAMPUS))
 
 
 # FEEDER SCHOOLS -------------------------
@@ -346,15 +551,15 @@ campus_all = campus_all %>%
       CAMPUS %in% planowest ~ "43910010",
       CAMPUS %in% planosenior ~ "43910001",
       CAMPUS %in% newbraunfelshs ~ "46901001",
-      TRUE ~ CAMPUS
+      TRUE ~ as.character(CAMPUS)
     )
   )
            
-feeders <- c(101902001, 101902012, 101902003, 101902004,101902005, 
-             108916001, 126905001, 165901002, 165901003, 184907001, 
-             220916002, 220916001, 220919001, 31903001, 31903002, 
-             31912001, 43901001, 43910006, 43910010, 43910001, 
-             46901001)          
+feeders <- c("101902001", "101902012", "101902003", "101902004","101902005", 
+             "108916001", "126905001", "165901002", "165901003", "184907001", 
+             "220916002", "220916001", "220919001", "31903001", "31903002", 
+             "31912001", "43901001", "43910006", "43910010", "43910001", 
+             "46901001")          
 
 campus_all_check <- campus_all %>% #generate mini data frame to check calculations 
   group_by(CAMPUS.new) %>%
@@ -367,9 +572,30 @@ campus_all_check <- campus_all %>% #generate mini data frame to check calculatio
          alg1.meets.cnt.2 = ifelse(CAMPUS.new %in% feeders, sum(alg1.meets.cnt, na.rm = T), alg1.meets.cnt),
          eng1.meets.pct.2 = (eng1.meets.cnt.2/eng1.all.cnt.2)*100,
          eng2.meets.pct.2 = (eng2.meets.cnt.2/eng2.all.cnt.2)*100,
-         alg1.meets.pct.2 = (alg1.meets.cnt.2/alg1.all.cnt.2)*100
+         alg1.meets.pct.2 = (alg1.meets.cnt.2/alg1.all.cnt.2)*100,
+         #soc
+         eng1.all.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng1.all.cnt_soc, na.rm = T), eng1.all.cnt_soc) , 
+         eng1.meets.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng1.meets.cnt_soc, na.rm = T), eng1.meets.cnt_soc),
+         eng2.all.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng2.all.cnt_soc, na.rm = T), eng2.all.cnt_soc),
+         eng2.meets.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng2.meets.cnt_soc, na.rm = T), eng2.meets.cnt_soc),
+         alg1.all.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(alg1.all.cnt_soc, na.rm = T), alg1.all.cnt_soc),
+         alg1.meets.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(alg1.meets.cnt_soc, na.rm = T), alg1.meets.cnt_soc),
+         eng1.meets.pct.2_soc = (eng1.meets.cnt.2_soc/eng1.all.cnt.2_soc)*100,
+         eng2.meets.pct.2_soc = (eng2.meets.cnt.2_soc/eng2.all.cnt.2_soc)*100,
+         alg1.meets.pct.2_soc = (alg1.meets.cnt.2_soc/alg1.all.cnt.2_soc)*100,
+         #ecod
+         eng1.all.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng1.all.cnt_ecod, na.rm = T), eng1.all.cnt_ecod) , 
+         eng1.meets.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng1.meets.cnt_ecod, na.rm = T), eng1.meets.cnt_ecod),
+         eng2.all.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng2.all.cnt_ecod, na.rm = T), eng2.all.cnt_ecod),
+         eng2.meets.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng2.meets.cnt_ecod, na.rm = T), eng2.meets.cnt_ecod),
+         alg1.all.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(alg1.all.cnt_ecod, na.rm = T), alg1.all.cnt_ecod),
+         alg1.meets.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(alg1.meets.cnt_ecod, na.rm = T), alg1.meets.cnt_ecod),
+         eng1.meets.pct.2_ecod = (eng1.meets.cnt.2_ecod/eng1.all.cnt.2_ecod)*100,
+         eng2.meets.pct.2_ecod = (eng2.meets.cnt.2_ecod/eng2.all.cnt.2_ecod)*100,
+         alg1.meets.pct.2_ecod = (alg1.meets.cnt.2_ecod/alg1.all.cnt.2_ecod)*100,
   ) %>%
-  arrange(CAMPUS.new)
+  arrange(CAMPUS.new) %>% 
+  dplyr::select(CAMPUS, CAMPUS.new, CNAME, eng1.all.cnt.2:alg1.meets.pct.2_ecod)
 
 
 #CAMPUS ALL FINAL -----------------
@@ -381,6 +607,18 @@ campus_all_final <- campus_all %>% #if all calculations check out, apply to full
          eng2.meets.cnt.2 = ifelse(CAMPUS.new %in% feeders, sum(eng2.meets.cnt, na.rm = T), eng2.meets.cnt),
          alg1.all.cnt.2 = ifelse(CAMPUS.new %in% feeders, sum(alg1.all.cnt, na.rm = T), alg1.all.cnt),
          alg1.meets.cnt.2 = ifelse(CAMPUS.new %in% feeders, sum(alg1.meets.cnt, na.rm = T), alg1.meets.cnt),
+         eng1.all.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng1.all.cnt_soc, na.rm = T), eng1.all.cnt_soc) , 
+         eng1.meets.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng1.meets.cnt_soc, na.rm = T), eng1.meets.cnt_soc),
+         eng2.all.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng2.all.cnt_soc, na.rm = T), eng2.all.cnt_soc),
+         eng2.meets.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(eng2.meets.cnt_soc, na.rm = T), eng2.meets.cnt_soc),
+         alg1.all.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(alg1.all.cnt_soc, na.rm = T), alg1.all.cnt_soc),
+         alg1.meets.cnt.2_soc = ifelse(CAMPUS.new %in% feeders, sum(alg1.meets.cnt_soc, na.rm = T), alg1.meets.cnt_soc),
+         eng1.all.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng1.all.cnt_ecod, na.rm = T), eng1.all.cnt_ecod) , 
+         eng1.meets.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng1.meets.cnt_ecod, na.rm = T), eng1.meets.cnt_ecod),
+         eng2.all.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng2.all.cnt_ecod, na.rm = T), eng2.all.cnt_ecod),
+         eng2.meets.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(eng2.meets.cnt_ecod, na.rm = T), eng2.meets.cnt_ecod),
+         alg1.all.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(alg1.all.cnt_ecod, na.rm = T), alg1.all.cnt_ecod),
+         alg1.meets.cnt.2_ecod = ifelse(CAMPUS.new %in% feeders, sum(alg1.meets.cnt_ecod, na.rm = T), alg1.meets.cnt_ecod),
          cohort.four.yr.2 = ifelse(CAMPUS.new %in% feeders, sum(cohort.four.yr, na.rm =T), cohort.four.yr),
          grads.four.yr.2 = ifelse(CAMPUS.new %in% feeders, sum(grads.four.yr, na.rm = T), grads.four.yr),
          died.four.yr.2 = ifelse(CAMPUS.new %in% feeders, sum(died.four.yr, na.rm = T), died.four.yr),
@@ -391,12 +629,30 @@ campus_all_final <- campus_all %>% #if all calculations check out, apply to full
          grads.six.yr.2 = ifelse(CAMPUS.new %in% feeders, sum(grads.six.yr, na.rm = T), grads.six.yr),
          died.six.yr.2 = ifelse(CAMPUS.new %in% feeders, sum(died.six.yr, na.rm = T), died.six.yr)
   ) %>%
-  group_by(CAMPUS) %>%
+  group_by(CAMPUS.new) %>%
   mutate(dup = row_number()) %>%
   filter(dup == 1) %>%
   ungroup()
 
 
+#write.csv(campus_all, here("R Projects", "Rankings Fall 2019", "Tables", "mastercampus_fortsg.csv"))
 
+#create rankings analysis file
 
+campus_master <- campus_all_final %>%
+  #drop feeder campuses
+  filter(CAMPUS != "101902081" & CAMPUS != "101902082" & CAMPUS != "101902083" & CAMPUS != "101902084" & CAMPUS != "101902085" &
+           CAMPUS != "108916041" & CAMPUS != "126905003" & CAMPUS != "165901042" & CAMPUS != "165901044" & CAMPUS != "184907009" &
+           CAMPUS != "220916042" & CAMPUS != "220916045" & CAMPUS != "220916041" & CAMPUS != "220916043" & CAMPUS != "220916044" &
+           CAMPUS != "220919003" & CAMPUS != "226903041" & CAMPUS != "31903007" & CAMPUS != "31906002" & CAMPUS != "31912007" & 
+           CAMPUS != "43901002" & CAMPUS != "43910003" & CAMPUS != "43910011" & CAMPUS != "43910007" & CAMPUS != "43910009" &
+           CAMPUS != "43910004" & CAMPUS != "43910005" & CAMPUS != "46901002" & CAMPUS != "57904002") %>%
+  #drop schools with fewer than 90 students, or no name, or missing growth
+  filter(all.cnt >= 90 | is.na(CNAME) | is.na(growth.avg)) %>%
+  select(-c(CAMPUS.new)) %>%
+  filter(instructio == "REGULAR INSTRUCTIONAL") #drop aea schools
+
+write_csv(campus_master, here::here("data-clean/campus_master.csv"))
+#write file to use for rankings analysis
+#write.csv(campus_master, here("R Projects", "Rankings Fall 2019", "Tables", "rankmaster_2019.csv"))
 
