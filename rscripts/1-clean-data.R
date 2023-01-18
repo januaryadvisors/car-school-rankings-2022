@@ -214,6 +214,18 @@ staar_e2 <- staar_e2_raw %>%
 
 
 #Combine all and aggregate up to campus level; calculate percentages
+staar_counts_by_grade = rbind(staar_eng3, staar_sp3, staar_eng4, staar_sp4, staar_eng5, staar_sp5,
+                              staar_6, staar_7, staar_8, staar_a1, staar_e1, staar_e2) %>% 
+  filter(variable=="r.all.cnt" | variable =="m.all.cnt") %>% 
+  group_by(CAMPUS, variable, grade) %>% 
+  summarise(value = sum(value, na.rm=T)) %>% 
+  ungroup() %>% 
+  unite(col = "var_grade", c("variable", "grade"), sep="_") %>% 
+  spread(var_grade, value) %>% 
+  mutate(across(c(m.all.cnt_3:r.all.cnt_8), ~replace_na(., 0)))
+
+
+
 staar_all = rbind(staar_eng3, staar_sp3, staar_eng4, staar_sp4, staar_eng5, staar_sp5,
                   staar_6, staar_7, staar_8, staar_a1, staar_e1, staar_e2) %>% 
   group_by(CAMPUS, variable) %>% 
@@ -285,7 +297,8 @@ staar_all = rbind(staar_eng3, staar_sp3, staar_eng4, staar_sp4, staar_eng5, staa
            alg1.meets.cnt_ecod,alg1.all.cnt_ecod, eng1.meets.cnt_ecod, eng1.all.cnt_ecod,
            eng2.meets.cnt_ecod, eng2.all.cnt_ecod,
            )) %>%
-  naniar::replace_with_na(replace = list(r.meets.pct = c(NaN), m.meets.pct = c(NaN)))
+  naniar::replace_with_na(replace = list(r.meets.pct = c(NaN), m.meets.pct = c(NaN))) %>% 
+  left_join(., staar_counts_by_grade)
 
 
 

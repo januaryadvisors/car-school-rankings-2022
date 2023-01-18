@@ -15,16 +15,18 @@ library(ggrepel)
 campus_master = read_csv(here::here("data-clean/campus_master.csv"))
 
 
-middle.grade.low <- c("EE", "PK", "KG", "01", "02", "03", "04", "05", "06", "07", "08")
+middle.grade.low <- c("EE", "EE KG", "EE 01", "EE 02", "EE 09", "PK", "PK 02", "PK 09",
+                      "KG", "01", "02", "03", "04", "05", "06", "07", "08")
 middle.grade.high <- c("06", "07", "08", "09", "10", "11", "12")
 
 middle <- campus_master %>%
   rowwise() %>%
   filter(low.grade %in% middle.grade.low) %>%
   filter(high.grade %in% middle.grade.high) %>%
-  filter(!((low.grade == "EE" & high.grade == "06") | (low.grade == "PK" & high.grade == "06") |
+  filter(!((str_detect(low.grade, "EE") & high.grade == "06") | 
+             (str_detect(low.grade, "PK") & high.grade == "06") |
              (low.grade == "KG" & high.grade == "06") | (low.grade == "01" & high.grade == "06") |
-             (low.grade == "02" & high.grade == "06") | (low.grade == "03" & high.grade == "06") |
+             (str_detect(low.grade, "02") & high.grade == "06") | (low.grade == "03" & high.grade == "06") |
              (low.grade == "04" & high.grade == "06") | (low.grade == "05" & high.grade == "06"))) %>%
   select(-c(alg1.all.cnt:eng2.masters.pct, eng1.all.cnt.2:dup)) %>%
   mutate(
@@ -241,7 +243,8 @@ middle_final <- middle %>%
   ) %>%
   dplyr::select(
     Rank, CAMPUS, CNAME, district, overall.score, overall.grade2,
-    all.cnt, ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade, race.equity.index.grade,
+    all.cnt, m
+    ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade, race.equity.index.grade,
     charter, county, low.grade, high.grade, region,
     growth.avg, w.avg, camp.perf.score, race.equity.index, goldribbon, greligible, grcharter,
     grchartereligible, qualitycharter, region_new, mobility.pct, soc.pct

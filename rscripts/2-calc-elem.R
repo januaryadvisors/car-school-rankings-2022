@@ -16,7 +16,14 @@ campus_master = read_csv(here::here("data-clean/campus_master.csv"))
 
 #filter by elementary low grade levels
 
-elem.grade <- c("EE", "PK", "KG", "01", "02", "03", "04", "05")
+elem.grade <- c("EE", "EE KG", "EE 01", "EE 02", "EE 09", "PK", "PK 02", "PK 09",
+                "KG", "01", "02", "03", "04", "05")
+
+missing_3_5 = campus_master %>% 
+  filter(
+    r.all.cnt_3==0 & r.all.cnt_4==0 & r.all.cnt_5 == 0 &
+      m.all.cnt_3==0 & m.all.cnt_4==0 & m.all.cnt_5 == 0
+  )
 
 elementary <- campus_master %>%
   filter(low.grade %in% elem.grade) %>%
@@ -29,8 +36,10 @@ elementary <- campus_master %>%
     w.avg = ifelse(is.nan(w.avg), NA, w.avg),
     county = str_to_upper(county.nam)
   ) %>% 
-  ungroup()
-
+  ungroup() %>% 
+  filter(!(CAMPUS %in% missing_3_5$CAMPUS))
+  
+  
 
 #check grade crosstabs to verify elementary schools have been selected
 tabyl(elementary, low.grade, high.grade)
@@ -185,7 +194,6 @@ tabyl(elementary, region_new)
 
 #Final for distribution ------------------------------
 elementary_final <- elementary %>%
-  select(c(Rank:county.nam, county, low.grade, high.grade, region, growth.avg, w.avg, camp.perf.score:region_new, mobility.pct)) %>%
   select(-c(overall.grade, -race.pct.check)) %>%
   mutate(charter = ifelse(charter == 1, "Yes", "No"),
          goldribbon = ifelse(goldribbon == 1, "Yes", "No"),
@@ -201,7 +209,9 @@ elementary_final <- elementary %>%
   ) %>%
   dplyr::select(
     Rank, CAMPUS, CNAME, district, overall.score, overall.grade2,
-    all.cnt, ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade,
+    all.cnt, r.all.cnt_3, r.all.cnt_4, r.all.cnt_5, r.all.cnt_6, r.all.cnt_7, r.all.cnt_8,
+    m.all.cnt_3, m.all.cnt_4, m.all.cnt_5, m.all.cnt_6, m.all.cnt_7, m.all.cnt_8,
+    ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade,
     charter, county, low.grade, high.grade, region,
     growth.avg, w.avg, camp.perf.score, goldribbon, greligible, grcharter,
     grchartereligible, qualitycharter, region_new, mobility.pct

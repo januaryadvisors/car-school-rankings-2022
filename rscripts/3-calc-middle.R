@@ -14,22 +14,37 @@ library(ggrepel)
 #LOAD & FILTER data -------------------
 campus_master = read_csv(here::here("data-clean/campus_master.csv"))
 
+missing_6_8 = campus_master %>% 
+  filter(
+    r.all.cnt_6==0 & r.all.cnt_7==0 & r.all.cnt_8 == 0 &
+      m.all.cnt_6==0 & m.all.cnt_7==0 & m.all.cnt_8 == 0
+  )
 
-middle.grade.low <- c("EE", "PK", "KG", "01", "02", "03", "04", "05", "06", "07", "08")
+middle.grade.low <- c("EE", "EE KG", "EE 01", "EE 02", "EE 09", "PK", "PK 02", "PK 09",
+                      "KG", "01", "02", "03", "04", "05", "06", "07", "08")
 middle.grade.high <- c("06", "07", "08", "09", "10", "11", "12")
 
 middle <- campus_master %>%
   rowwise() %>%
   filter(low.grade %in% middle.grade.low) %>%
   filter(high.grade %in% middle.grade.high) %>%
-  filter(!((low.grade == "EE" & high.grade == "06") | (low.grade == "PK" & high.grade == "06") |
+  filter(!((str_detect(low.grade, "EE") & high.grade == "06") | 
+             (str_detect(low.grade, "PK") & high.grade == "06") |
              (low.grade == "KG" & high.grade == "06") | (low.grade == "01" & high.grade == "06") |
-             (low.grade == "02" & high.grade == "06") | (low.grade == "03" & high.grade == "06") |
+             (str_detect(low.grade, "02") & high.grade == "06") | (low.grade == "03" & high.grade == "06") |
              (low.grade == "04" & high.grade == "06") | (low.grade == "05" & high.grade == "06"))) %>%
   select(-c(alg1.all.cnt:eng2.masters.pct, eng1.all.cnt.2:dup)) %>%
-  mutate(w.avg = mean(c(m.meets.pct, r.meets.pct), na.rm = T),#generate weighted meets percentage
-         county = str_to_upper(county.nam)) %>% 
-  ungroup()
+  mutate(
+    soc.pct = 100-white.pct,
+    w.avg = mean(c(m.meets.pct, r.meets.pct), na.rm = T),#generate weighted meets percentage
+    w.avg_soc = mean(c(m.meets.pct_soc, r.meets.pct_soc), na.rm = T),
+    w.avg_ecod = mean(c(m.meets.pct_ecod, r.meets.pct_ecod), na.rm = T),
+    county = str_to_upper(county.nam)) %>% 
+  ungroup() %>% 
+  #Drop additional campuses (n=68) where no one took reading/math test in 6-8 grade 
+  filter(!(CAMPUS %in% missing_6_8$CAMPUS))
+
+
 
 #check grade ranges
 
@@ -199,7 +214,10 @@ middle_final <- middle %>%
   ) %>%
   dplyr::select(
     Rank, CAMPUS, CNAME, district, overall.score, overall.grade2,
-    all.cnt, ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade,
+    all.cnt, 
+    r.all.cnt_3, r.all.cnt_4, r.all.cnt_5, r.all.cnt_6, r.all.cnt_7, r.all.cnt_8,
+    m.all.cnt_3, m.all.cnt_4, m.all.cnt_5, m.all.cnt_6, m.all.cnt_7, m.all.cnt_8,
+    ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade,
     charter, county, low.grade, high.grade, region,
     growth.avg, w.avg, camp.perf.score, goldribbon, greligible, grcharter,
     grchartereligible, qualitycharter, region_new, mobility.pct

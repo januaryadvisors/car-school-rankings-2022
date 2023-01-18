@@ -25,7 +25,8 @@ high <- campus_master %>%
     m.avg = ((alg1.meets.cnt.2)/(alg1.all.cnt.2))*100,
     w.avg = mean(c(e.avg, m.avg), na.rm = T)
   ) %>%
-  mutate(satact.part.rate = ifelse(is.na(satact.part.rate), 0,
+  mutate(
+    satact.part.rate = ifelse(is.na(satact.part.rate), 0,
                                    ifelse(satact.part.rate > 100, 100, satact.part.rate)),
          sat.avg = ifelse(is.na(sat.avg), 0, sat.avg),
          act.avg = ifelse(is.na(act.avg), 0, act.avg),
@@ -38,7 +39,7 @@ high <- campus_master %>%
          ap.ib.math.crit.pct = ifelse(is.na(ap.ib.math.crit.pct), 0, ap.ib.math.crit.pct),
          county = str_to_upper(county.nam)
   ) %>%
-  ungroup()
+  ungroup() 
 
 tabyl(high, low.grade, high.grade)
 
@@ -134,10 +135,9 @@ high <- high %>%
     g.rate.flag.4 = ifelse(cohort.four.yr.2 <= 2.5 & grads.four.yr.2 <= 2.5, 1, 0),
     g.rate.flag.5 = ifelse(cohort.five.yr.2 <= 2.5 & grads.five.yr.2 <= 2.5, 1, 0),
     g.rate.flag.6 = ifelse(cohort.six.yr.2 <= 2.5 & grads.six.yr.2 <= 2.5, 1, 0),
-    g.rate.flag.all = ifelse(g.rate.flag.4 == 1 & g.rate.flag.5 == 1 & g.rate.flag.6 == 1, 1, 0)
+    g.rate.flag.all = ifelse(g.rate.flag.4 == 1 | g.rate.flag.5 == 1 | g.rate.flag.6 == 1, 1, 0)
   ) %>%
-  filter(grad.rate.car > 0 | g.rate.flag.all != 1) %>%
-  select(-c(g.rate.flag.all, g.rate.flag.4, g.rate.flag.5, g.rate.flag.6))
+  filter(grad.rate.car > 0 & g.rate.flag.all != 1) #Changed to drop more strictly. Previous version wasn't dropping
 
 #convert SAT/ACT scores to percentile (0-100 scale)
 
@@ -153,6 +153,8 @@ high <- high %>%
     coll.ready.score = ((grad.rate.car*100)*.6) + (satact.part.rate*.1) + (ap.ib.part.rate*.1) + (ap.ib.above.criterion.rate*.1) +
       (sat.perc*.05) + (act.perc*.05)
   ) %>%
+  # select(CAMPUS, CNAME, district, coll.ready.score, grad.rate.car, satact.part.rate, ap.ib.part.rate, ap.ib.above.criterion.rate,
+  #        sat.perc, act.perc, sat.avg, act.avg)
   filter(!is.na(coll.ready.score)) 
 
 #create college readiness grade
@@ -273,7 +275,9 @@ high_final <- high %>%
   ) %>%
   dplyr::select(
     Rank, CAMPUS, CNAME, district, overall.score, overall.grade2,
-    all.cnt, ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade, coll.ready.grade,
+    all.cnt, eng1.all.cnt.2, eng2.all.cnt.2, alg1.all.cnt.2,
+    cohort.six.yr.2, cohort.five.yr.2, cohort.four.yr.2,
+    ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade, coll.ready.grade,
     charter, county, low.grade, high.grade, region,
     growth.avg, w.avg, camp.perf.score, coll.ready.score, goldribbon, greligible, grcharter,
     grchartereligible, qualitycharter, region_new, mobility.pct
@@ -284,6 +288,12 @@ high_final <- high %>%
                     overall.score = "Total Score",
                     overall.grade2 = "Overall Grade",
                     all.cnt = "Total Enrollment",
+                    eng1.all.cnt.2 = "# Eng 1 test-takers",
+                    eng2.all.cnt.2 = "# Eng 2 test-takers",
+                    alg1.all.cnt.2 = "# Alg 1 test-takers",
+                    cohort.six.yr.2 = "# in 6-year grad cohort",
+                    cohort.five.yr.2 = "# in 5-year grad cohort",
+                    cohort.four.yr.2 = "# in 4-year grad cohort",
                     ecodis.pct = "Percent Economically Disadvantaged",
                     stud.ach.grade = "Student Achievement Grade",
                     camp.perf.grade = "Campus Performance Grade",
