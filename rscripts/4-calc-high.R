@@ -21,6 +21,7 @@ high <- campus_master %>%
   rowwise() %>%
   mutate(
     eng2.meets.cnt.2 = ifelse(is.na(eng2.meets.cnt.2),eng1.meets.cnt.2, eng2.meets.cnt.2), #if no eng2, replace with eng1; makes sure w.avg isn't NA
+    eng2.all.cnt.2 = ifelse(is.na(eng2.all.cnt.2),eng1.all.cnt.2, eng2.all.cnt.2), #if no eng2, replace with eng1; makes sure w.avg isn't NA
     e.avg = ((eng1.meets.cnt.2 + eng2.meets.cnt.2)/(eng1.all.cnt.2 + eng2.all.cnt.2))*100, #generate weighted meets percentage
     m.avg = ((alg1.meets.cnt.2)/(alg1.all.cnt.2))*100,
     w.avg = mean(c(e.avg, m.avg), na.rm = T)
@@ -55,13 +56,24 @@ feeder_check <- high %>%
 
 high <- high %>%
   mutate(
-    stud.ach.grade = ifelse(w.avg >= 60, "A",
-                            ifelse(w.avg >= 45 & w.avg < 60, "B",
-                                   ifelse(w.avg >= 35 & w.avg < 45, "C",
-                                          ifelse(w.avg >= 25 & w.avg < 35, "D",
-                                                 ifelse(w.avg < 25, "F", NA))))),
-    stud.ach.grade2 = NA) #to check using Claire's old code at end of script
+    stud.ach.ntile = w.avg, #percent_rank(w.avg)*100,
+    stud.ach.grade = case_when(
+      stud.ach.ntile>=80 ~ "A",
+      stud.ach.ntile<80 & stud.ach.ntile>=60 ~ "B",
+      stud.ach.ntile<60 & stud.ach.ntile>=40 ~ "C",
+      stud.ach.ntile<40 & stud.ach.ntile>=20 ~ "D",
+      stud.ach.ntile<20 & stud.ach.ntile>=0 ~ "F"
+    ),
+    #Old method
+    # stud.ach.grade = ifelse(w.avg >= 60, "A",
+    #                         ifelse(w.avg >= 45 & w.avg < 60, "B",
+    #                                ifelse(w.avg >= 35 & w.avg < 45, "C",
+    #                                       ifelse(w.avg >= 25 & w.avg < 35, "D",
+    #                                              ifelse(w.avg < 25, "F", NA))))),
+    stud.ach.grade2 = NA
+  ) #to check using Claire's old code at end of script
 
+#t = dplyr::select(high1, CAMPUS, w.avg, stud.ach.ntile)
 #check grades
 
 tabyl(high, stud.ach.grade)
@@ -71,11 +83,21 @@ tabyl(high, stud.ach.grade)
 
 high <- high %>%
   mutate(
-    growth.grade = ifelse(growth.avg >= 55, "A",
-                          ifelse(growth.avg >= 52 & growth.avg < 55, "B",
-                                 ifelse(growth.avg >= 50 & growth.avg < 52, "C",
-                                        ifelse(growth.avg >= 48 & growth.avg < 50, "D",
-                                               ifelse(growth.avg < 48, "F", NA))))),
+    growth.avg = percent_rank(growth.avg)*100,
+    growth.grade = case_when(
+      growth.avg>=80 ~ "A",
+      growth.avg<80 & growth.avg>=60 ~ "B",
+      growth.avg<60 & growth.avg>=40 ~ "C",
+      growth.avg<40 & growth.avg>=20 ~ "D",
+      growth.avg<20 & growth.avg>=0 ~ "F"
+    ),
+
+    #OLD METHOD
+    # growth.grade = ifelse(growth.avg >= 55, "A",
+    #                       ifelse(growth.avg >= 52 & growth.avg < 55, "B",
+    #                              ifelse(growth.avg >= 50 & growth.avg < 52, "C",
+    #                                     ifelse(growth.avg >= 48 & growth.avg < 50, "D",
+    #                                            ifelse(growth.avg < 48, "F", NA))))),
     growth.grade2 = NA)
 
 tabyl(high, growth.grade)
@@ -103,11 +125,20 @@ high <- high %>%
 
 high <- high %>%
   mutate(
-    camp.perf.grade = ifelse(camp.perf.score >= 60, "A",
-                             ifelse(camp.perf.score >= 45 & camp.perf.score < 60, "B",
-                                    ifelse(camp.perf.score >= 35 & camp.perf.score < 45, "C",
-                                           ifelse(camp.perf.score >= 25 & camp.perf.score < 35, "D",
-                                                  ifelse(camp.perf.score < 25, "F", NA))))),
+    camp.perf.score = percent_rank(camp.perf.score)*100,
+    camp.perf.grade = case_when(
+      camp.perf.score>=80 ~ "A",
+      camp.perf.score<80 & camp.perf.score>=60 ~ "B",
+      camp.perf.score<60 & camp.perf.score>=40 ~ "C",
+      camp.perf.score<40 & camp.perf.score>=20 ~ "D",
+      camp.perf.score<20 & camp.perf.score>=0 ~ "F"
+    ),
+    #OLD METHOD
+    # camp.perf.grade = ifelse(camp.perf.score >= 60, "A",
+    #                          ifelse(camp.perf.score >= 45 & camp.perf.score < 60, "B",
+    #                                 ifelse(camp.perf.score >= 35 & camp.perf.score < 45, "C",
+    #                                        ifelse(camp.perf.score >= 25 & camp.perf.score < 35, "D",
+    #                                               ifelse(camp.perf.score < 25, "F", NA))))),
     camp.perf.grade2 = NA)
 
 tabyl(high, camp.perf.grade)
@@ -161,11 +192,19 @@ high <- high %>%
 
 high <- high %>%
   mutate(
-    coll.ready.grade = ifelse(coll.ready.score >= 79, "A",
-                              ifelse(coll.ready.score >= 72 & coll.ready.score < 79, "B",
-                                     ifelse(coll.ready.score >= 68 & coll.ready.score < 72, "C",
-                                            ifelse(coll.ready.score >= 65 & coll.ready.score < 68, "D",
-                                                   ifelse(coll.ready.score < 65, "F", NA))))),
+    coll.ready.score = percent_rank(coll.ready.score)*100,
+    coll.ready.grade = case_when(
+      coll.ready.score>=80 ~ "A",
+      coll.ready.score<80 & coll.ready.score>=60 ~ "B",
+      coll.ready.score<60 & coll.ready.score>=40 ~ "C",
+      coll.ready.score<40 & coll.ready.score>=20 ~ "D",
+      coll.ready.score<20 & coll.ready.score>=0 ~ "F"
+    ),
+    # coll.ready.grade = ifelse(coll.ready.score >= 79, "A",
+    #                           ifelse(coll.ready.score >= 72 & coll.ready.score < 79, "B",
+    #                                  ifelse(coll.ready.score >= 68 & coll.ready.score < 72, "C",
+    #                                         ifelse(coll.ready.score >= 65 & coll.ready.score < 68, "D",
+    #                                                ifelse(coll.ready.score < 65, "F", NA))))),
     coll.ready.grade2 = NA)
 
 tabyl(high, coll.ready.grade)
@@ -175,12 +214,26 @@ tabyl(high, coll.ready.grade)
 
 high <- high %>%
   mutate(
+    #camp.perf.score_ntile = ntile(camp.perf.score, 100),
+    #growth.avg_ntile = ntile(growth.avg, 100),
+    #coll.ready.score_ntile = ntile(coll.ready.score, 100),
+    
     overall.score = (w.avg + camp.perf.score + growth.avg + coll.ready.score)/4,
-    overall.grade = ifelse(overall.score >= 70, "A",
-                           ifelse(overall.score >= 55 & overall.score < 70, "B",
-                                  ifelse(overall.score >= 45 & overall.score < 55, "C",
-                                         ifelse(overall.score >= 35 & overall.score < 45, "D",
-                                                ifelse(overall.score < 35, "F", NA)))))) %>%
+    #overall.score_ntile = (w.avg + camp.perf.score_ntile + growth.avg_ntile + coll.ready.score_ntile)/4,
+    
+    overall.grade = case_when(
+      overall.score>=80 ~ "A",
+      overall.score<80 & overall.score>=60 ~ "B",
+      overall.score<60 & overall.score>=40 ~ "C",
+      overall.score<40 & overall.score>=20 ~ "D",
+      overall.score<20 & overall.score>=0 ~ "F"
+    )
+    # overall.grade = ifelse(overall.score >= 70, "A",
+    #                        ifelse(overall.score >= 55 & overall.score < 70, "B",
+    #                               ifelse(overall.score >= 45 & overall.score < 55, "C",
+    #                                      ifelse(overall.score >= 35 & overall.score < 45, "D",
+    #                                             ifelse(overall.score < 35, "F", NA)))))
+    ) %>%
   arrange(desc(overall.score)) %>%
   mutate(Rank = row_number()) %>%
   select(c(Rank, CAMPUS, CNAME, district, overall.score, overall.grade, all.cnt, ecodis.pct, stud.ach.grade, 
@@ -191,24 +244,41 @@ tabyl(high, overall.grade)
 
 #determine +/- cutoffs for each grade
 
-high_tertiles <- high %>%
-  group_by(overall.grade) %>%
-  summarise(tertile = list(enframe(quantile(overall.score, probs = c(.33, .67))))) %>%
-  unnest(tertile)
-
+# high_tertiles <- high %>%
+#   group_by(overall.grade) %>%
+#   summarise(tertile = list(enframe(quantile(overall.score, probs = c(.33, .67))))) %>%
+#   unnest(tertile) %>% 
+#   arrange(overall.grade, desc(value))
 #assign +/- based on tertile scores
 
 high <- high %>%
   mutate(
-    overall.grade2 = ifelse(overall.score >= 81.3, "A+",
-                            ifelse(overall.score >= 70 & overall.score <= 74.7, "A-",
-                                   ifelse(overall.score >= 63.7 & overall.score < 70, "B+",
-                                          ifelse(overall.score >= 55 & overall.score <= 59.1, "B-",
-                                                 ifelse(overall.score >= 51.9 & overall.score < 55, "C+",
-                                                        ifelse(overall.score >= 45 & overall.score <= 48.5, "C-",
-                                                               ifelse(overall.score >= 42.1 & overall.score < 45, "D+",
-                                                                      ifelse(overall.score >= 35 & overall.score <= 39.3, "D-", overall.grade))))))))
-  ) %>%
+    overall.grade2 = case_when(
+      overall.score>=94 ~ "A+", 
+      overall.score<94 & overall.score>=86 ~ "A", 
+      overall.score<86 & overall.score>=80 ~ "A-", 
+      overall.score<80 & overall.score>=74 ~ "B+",
+      overall.score<74 & overall.score>=66 ~ "B",
+      overall.score<66 & overall.score>=60 ~ "B-",
+      overall.score<60 & overall.score>=54 ~ "C+",
+      overall.score<54 & overall.score>=46 ~ "C",
+      overall.score<46 & overall.score>=40 ~ "C-",
+      overall.score<40 & overall.score>=34 ~ "D+",
+      overall.score<34 & overall.score>=26 ~ "D",
+      overall.score<26 & overall.score>=20 ~ "D-",
+      overall.score<20 ~ "F"
+    )
+    #OLD METHOD
+    # overall.grade2 = ifelse(overall.score >= 81.3, "A+",
+    #                         ifelse(overall.score >= 70 & overall.score <= 74.7, "A-",
+    #                                ifelse(overall.score >= 63.7 & overall.score < 70, "B+",
+    #                                       ifelse(overall.score >= 55 & overall.score <= 59.1, "B-",
+    #                                              ifelse(overall.score >= 51.9 & overall.score < 55, "C+",
+    #                                                     ifelse(overall.score >= 45 & overall.score <= 48.5, "C-",
+    #                                                            ifelse(overall.score >= 42.1 & overall.score < 45, "D+",
+    #                                                                   ifelse(overall.score >= 35 & overall.score <= 39.3, "D-", overall.grade))))))))
+    # 
+    ) %>%
   arrange(desc(overall.score)) %>%
   filter(CAMPUS != 101828001) %>% #remove Houston Gateway schools
   mutate(Rank = row_number()) %>%
@@ -245,6 +315,7 @@ high <- high %>%
     )
   )
 
+tabyl(high, magnet)
 tabyl(high, goldribbon)
 tabyl(high, greligible)
 tabyl(high, grcharter)
@@ -256,7 +327,7 @@ tabyl(high, region_new)
 
 #Final for distribution ------------------------------
 high_final <- high %>%
-  select(c(Rank:county, low.grade, high.grade, region, growth.avg, w.avg, camp.perf.score:region_new, mobility.pct)) %>%
+  #select(c(Rank:county, low.grade, high.grade, region, growth.avg, w.avg, camp.perf.score:region_new, mobility.pct)) %>%
   select(-c(overall.grade, camp.perf.grade2, grad.rate.6yr:act.perc, coll.ready.grade2)) %>%
   mutate(charter = ifelse(charter == 1, "Yes", "No"),
          goldribbon = ifelse(goldribbon == 1, "Yes", "No"),
@@ -275,13 +346,17 @@ high_final <- high %>%
   ) %>%
   dplyr::select(
     Rank, CAMPUS, CNAME, district, overall.score, overall.grade2,
-    all.cnt, eng1.all.cnt.2, eng2.all.cnt.2, alg1.all.cnt.2,
-    cohort.six.yr.2, cohort.five.yr.2, cohort.four.yr.2,
+    all.cnt, 
+    #eng1.all.cnt.2, eng2.all.cnt.2, alg1.all.cnt.2,
+    #cohort.six.yr.2, cohort.five.yr.2, cohort.four.yr.2,
     ecodis.pct, stud.ach.grade, camp.perf.grade, growth.grade, coll.ready.grade,
     charter, county, low.grade, high.grade, region,
-    growth.avg, w.avg, camp.perf.score, coll.ready.score, goldribbon, greligible, grcharter,
+    growth.avg, w.avg, camp.perf.score, coll.ready.score, 
+    goldribbon, greligible, grcharter,
     grchartereligible, qualitycharter, region_new, mobility.pct
   ) %>% 
+  arrange(desc(overall.score)) %>% 
+  dplyr::select(Rank, CAMPUS, CNAME, district, overall.score, everything()) %>% 
   reshape::rename(c(CAMPUS = "Campus ID Number",
                     CNAME = "Campus Name",
                     district = "District Name",
@@ -314,7 +389,7 @@ high_final <- high %>%
                     grchartereligible = "High-Performing, High-Poverty Charter Eligible?",
                     qualitycharter = "Any High-Performing Charter?",
                     region_new = "Local Region",
-                    mobility.pct = "Student Mobility Quartile"))
+                    mobility.pct = "Student Mobility Quartile")) 
 
 
 write_csv(high_final, file=here::here("output", "high_2022_all_state.csv"))
@@ -340,8 +415,8 @@ write_csv(gr_all, file=here::here("output", "high_2022_goldribbon_state.csv"))
 lapply(1:length(regions), function(x) {
   print(regions[x])
   df = filter(high_final, `Local Region`==regions[x] & `Gold Ribbon School?`=="Yes") %>% 
-    mutate(`Region Rank` = row_number()) %>% 
-    dplyr::select("Region Rank", "State Rank" = Rank, everything())
+    mutate(`Gold Ribbon Region Rank` = row_number()) %>% 
+    dplyr::select("Gold Ribbon Region Rank", "State Rank" = Rank, everything())
   
   region_export_name = str_replace_all(str_to_lower(regions[x]), " ", "")
   

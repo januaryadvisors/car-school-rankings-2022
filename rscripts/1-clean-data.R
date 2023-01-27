@@ -449,8 +449,8 @@ peg = read_excel(here::here("data-raw/Children At Risk PIR_PR Response Part 2.xl
 magnet_echs = read_csv(here::here("data-raw/PRU_7128.csv")) %>% 
   dplyr::select(CAMPUS, MAGNET_STATUS, ECHS_IND) %>% 
   mutate(
-    echs = ifelse(ECHS_IND == "YES", 1, 0),
-    magnet = ifelse(MAGNET_STATUS == "YES", 1, 0)
+    echs = ifelse(ECHS_IND == "Y", 1, 0),
+    magnet = ifelse(MAGNET_STATUS == "Y", 1, 0)
   ) %>% 
   dplyr::select(CAMPUS, echs, magnet)
 
