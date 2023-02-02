@@ -151,24 +151,35 @@ tabyl(high, camp.perf.grade)
 
 high <- high %>%
   mutate(
-    grad.rate.6yr = (grads.six.yr.2/(cohort.six.yr.2 - died.six.yr.2)),
-    grad.rate.5yr = (grads.five.yr.2/(cohort.five.yr.2 - died.five.yr.2)),
-    grad.rate.4yr = (grads.four.yr.2/(cohort.four.yr.2 - died.four.yr.2)),
-    grad.rate.6yr = ifelse(is.na(grad.rate.6yr), -99, grad.rate.6yr),
-    grad.rate.5yr = ifelse(is.na(grad.rate.5yr), -99, grad.rate.5yr),
-    grad.rate.4yr = ifelse(is.na(grad.rate.4yr), -99, grad.rate.4yr),
-    grad.rate.car = ifelse(grad.rate.6yr > grad.rate.5yr & grad.rate.6yr > grad.rate.4yr & !is.na(grad.rate.6yr), grad.rate.6yr,
-                           ifelse(grad.rate.5yr > grad.rate.6yr & grad.rate.5yr > grad.rate.4yr & !is.na(grad.rate.5yr), grad.rate.5yr,
-                                  ifelse(grad.rate.4yr > grad.rate.6yr & grad.rate.4yr > grad.rate.5yr & !is.na(grad.rate.4yr), grad.rate.4yr,
-                                         ifelse(grad.rate.6yr == grad.rate.5yr & grad.rate.6yr > grad.rate.4yr & !is.na(grad.rate.6yr), grad.rate.6yr,
-                                                ifelse(grad.rate.5yr == grad.rate.4yr & grad.rate.5yr > grad.rate.6yr & !is.na(grad.rate.5yr), grad.rate.5yr, NA))))),
+    #I think it makes more sense to do these flags first
+    g.rate.flag.6 = ifelse((cohort.six.yr.2 <= 2.5 & grads.six.yr.2 <= 2.5) | is.na(cohort.six.yr.2), 1, 0),
+    g.rate.flag.5 = ifelse((cohort.five.yr.2 <= 2.5 & grads.five.yr.2 <= 2.5)  | is.na(cohort.five.yr.2), 1, 0),
+    g.rate.flag.4 = ifelse((cohort.four.yr.2 <= 2.5 & grads.four.yr.2 <= 2.5) | is.na(cohort.four.yr.2), 1, 0),
+    
+    grad.rate.6yr = ifelse(g.rate.flag.6==0, grads.six.yr.2/(cohort.six.yr.2 - died.six.yr.2), NA),
+    grad.rate.5yr = ifelse(g.rate.flag.5==0, grads.five.yr.2/(cohort.five.yr.2 - died.five.yr.2), NA),
+    grad.rate.4yr = ifelse(g.rate.flag.4==0, grads.four.yr.2/(cohort.four.yr.2 - died.four.yr.2), NA),
+    
+    grad.rate.6yr = ifelse(is.na(grad.rate.6yr) | is.infinite(grad.rate.6yr), -99, grad.rate.6yr),
+    grad.rate.5yr = ifelse(is.na(grad.rate.5yr) | is.infinite(grad.rate.5yr), -99, grad.rate.5yr),
+    grad.rate.4yr = ifelse(is.na(grad.rate.4yr) | is.infinite(grad.rate.4yr), -99, grad.rate.4yr),
+    
+    #Added some new exceptions
+    grad.rate.car = case_when(
+      grad.rate.6yr > grad.rate.5yr & grad.rate.6yr > grad.rate.4yr & grad.rate.6yr!=-99 ~ grad.rate.6yr,
+      grad.rate.5yr > grad.rate.6yr & grad.rate.5yr > grad.rate.4yr & grad.rate.5yr!=-99 ~ grad.rate.5yr,
+      grad.rate.4yr > grad.rate.6yr & grad.rate.4yr > grad.rate.5yr & grad.rate.4yr!=-99  ~ grad.rate.4yr,
+      grad.rate.6yr == grad.rate.5yr & grad.rate.6yr > grad.rate.4yr & grad.rate.6yr!=-99 ~ grad.rate.6yr,
+      grad.rate.6yr == grad.rate.4yr & grad.rate.6yr > grad.rate.5yr & grad.rate.6yr!=-99  ~ grad.rate.6yr,
+      grad.rate.5yr == grad.rate.4yr & grad.rate.5yr > grad.rate.6yr & grad.rate.5yr!=-99  ~ grad.rate.5yr,
+      grad.rate.6yr == grad.rate.5yr & grad.rate.6yr == grad.rate.4yr & grad.rate.6yr!=-99 ~ grad.rate.6yr
+    ),
     grad.rate.car = ifelse(grad.rate.car > 1, 1, grad.rate.car),
-    g.rate.flag.4 = ifelse(cohort.four.yr.2 <= 2.5 & grads.four.yr.2 <= 2.5, 1, 0),
-    g.rate.flag.5 = ifelse(cohort.five.yr.2 <= 2.5 & grads.five.yr.2 <= 2.5, 1, 0),
-    g.rate.flag.6 = ifelse(cohort.six.yr.2 <= 2.5 & grads.six.yr.2 <= 2.5, 1, 0),
-    g.rate.flag.all = ifelse(g.rate.flag.4 == 1 | g.rate.flag.5 == 1 | g.rate.flag.6 == 1, 1, 0)
+    #g.rate.flag.all = ifelse(g.rate.flag.4 == 1 | g.rate.flag.5 == 1 | g.rate.flag.6 == 1, 1, 0)
+    #I don't get the point of this flag
   ) %>%
-  filter(grad.rate.car > 0 & g.rate.flag.all != 1) #Changed to drop more strictly. Previous version wasn't dropping
+  filter(grad.rate.car > 0 & !is.na(grad.rate.car)) 
+
 
 #convert SAT/ACT scores to percentile (0-100 scale)
 
